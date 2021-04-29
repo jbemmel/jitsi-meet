@@ -13,7 +13,8 @@ import {
 } from '../participants/actionTypes';
 import {
     getParticipantById,
-    getParticipantCount
+    getParticipantCount,
+    isLocalParticipantModerator
 } from '../participants/functions';
 import { MiddlewareRegistry } from '../redux';
 import { isLocalVideoTrackDesktop } from '../tracks/functions';
@@ -68,7 +69,11 @@ function _updateLastN({ getState }) {
         return;
     }
 
-    let lastN = typeof config.channelLastN === 'undefined' ? -1 : config.channelLastN;
+    // Support different setting for last-N for the moderator
+    let _chLastN = typeof config.channelLastN === 'undefined' ? -1 : config.channelLastN;
+    let _chLastN_mod = typeof config.channelLastN_moderator === 'undefined' ? _chLastN : config.channelLastN_moderator;
+
+    let lastN = isLocalParticipantModerator(state) ? _chLastN_mod : _chLastN;
 
     // Apply last N limit based on the # of participants and channelLastN settings.
     const limitedLastN = limitLastN(participantCount, lastNLimits);

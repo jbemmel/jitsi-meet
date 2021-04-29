@@ -69,6 +69,7 @@ export default [
     'callUUID',
 
     'channelLastN',
+    'channelLastN_moderator',
     'constraints',
     'brandingRoomAlias',
     'debug',
